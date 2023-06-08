@@ -55,22 +55,24 @@ int main() {
 
         // read the message from client and copy it in buffer
         int pid = fork();
+
+        ++child_proc_count;
         if (pid == 0){
             // listen message from the client all the time
             while(1){
                 char buffer[1024] = {0};
                 read(client_sockfd, buffer, 1024);
                 // print the message
-                printf("\tRequest: %s", buffer);
+ 
 
                 // check if the message is a negative integer
                 if (atoi(buffer) < 0) {
-                    printf("\tTerminating the child process, negative request was sent.\n");
-                    // close the socket
+                    printf("(child #%d) Request: %s, will terminate", child_proc_count, buffer);                    // close the socket
                     close(client_sockfd);
                     exit(0);
                 } else {
                     // send the message to the client
+                    printf("(child #%d) Request: %s", child_proc_count, buffer);
                     char message[1024];
                     sprintf(message, "%d", square(atoi(buffer)));
                     send(client_sockfd, message, strlen(message), 0);
@@ -79,7 +81,7 @@ int main() {
 
         } else {
             // print the pid of the child process
-            printf("#%d Child process created with pid: %d\n", ++child_proc_count, pid);
+            printf("(child #%d) Child process created with pid: %d\n", child_proc_count, pid);
         }
     }
 

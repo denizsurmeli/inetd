@@ -7,7 +7,7 @@
 
 #define PORT 123456 
 
-int main() {
+int main(int argc, char *argv[]) {
     // Create a socket
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd == -1) {
@@ -26,17 +26,21 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
+    // read the first argument as the client id
+    int client_id = atoi(argv[1]);
+    printf("This is client #%d\n", client_id);
+    
     while(1){
         // ask for a message to send to the server
         char message[1024];
-        printf("Enter a message: ");
+        printf("Enter request(negative to terminate): ");
         fgets(message, 1024, stdin);
 
         // send the message to the server
         send(sockfd, message, strlen(message), 0);
         // if the message sent was a negative integer, terminate the connection
         if (atoi(message) < 0) {
-            printf("Terminating!\n");
+            printf("Will terminate\n");
 
             // close the socket
             close(sockfd);
@@ -47,7 +51,7 @@ int main() {
         read(sockfd, buffer, 1024);
 
         // print the message
-        printf("\tServer sent: %s\n", buffer);
+        printf("\tResult: %s\n", buffer);
 
 
     }
