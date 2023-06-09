@@ -67,7 +67,8 @@ int main() {
 
                 // check if the message is a negative integer
                 if (atoi(buffer) < 0) {
-                    printf("(child #%d) Request: %s, will terminate", child_proc_count, buffer);                    // close the socket
+                    printf("(child #%d) Request: %s, will terminate", child_proc_count, buffer);                    
+                    // close the socket
                     close(client_sockfd);
                     exit(0);
                 } else {
