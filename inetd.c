@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 #include <unistd.h>
 #include <string.h>
 #include <pthread.h>
@@ -13,8 +14,8 @@
 void listen_port(int port) {
     /**
      * Listen for incoming connections on the given port.
-     * If the connection is coming from port 5010, a process will be spawned to handle the connection.
-     * If the connection is coming from port 5020, a thread will be spawned to handle the connection.
+     * If the connection is coming from port 5010, a square process will be spawned to handle the connection.
+     * If the connection is coming from port 5020, a cube process will be spawned to handle the connection.
     */
     // for logging purposes
     char *proc_name = port == SQUARE_PORT ? "square" : "cube";
@@ -68,11 +69,15 @@ void listen_port(int port) {
         // start the process named service with parameters: and the request and method
         char *service = "./service";
         char *request = buffer;
+        char *ip = inet_ntoa(client_addr.sin_addr);
         // concat the arguments into a single string
         char *command[256];
 
-        sprintf(command, "%s %s %s", service, request, method);
-        printf("command: %s\n", command);
+        sprintf(command, "%s %s %s %s", service, request, method, ip);
+        printf("(%s) Executing command: %s\n", proc_name, command);
+        // release the client socket
+        close(client_sockfd);
+
         // spawn a process to handle the request
         FILE *pipe = popen(command, "r");
         if (!pipe) {
@@ -87,8 +92,6 @@ void listen_port(int port) {
         // trim the newline from the end of the message
         result[strcspn(result, "\n")] = 0;
 
-        // send the result to the client
-        write(client_sockfd, result, strlen(result));
         // print the result
         printf("(%s) Reply sent as: %s. Terminating... \n", proc_name, result);
 
