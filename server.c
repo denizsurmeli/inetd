@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <string.h>
 
-#define PORT 123456
+#define PORT 5000
 
 
 int square(int x) {

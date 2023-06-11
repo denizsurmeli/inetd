@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <string.h>
 
-#define PORT 123456 
+#define PORT 5000 
 
 int main(int argc, char *argv[]) {
     // Create a socket
