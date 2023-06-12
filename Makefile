@@ -10,7 +10,7 @@ client:
 inetd_client: inetd
 	$(CC) inetd_client.c -o inetd_client
 inetd: service
-	$(CC) inetd.c -o inetd
+	$(CC) -pthread inetd.c -o inetd
 service:
 	$(CC) service.c -o service
 clean:

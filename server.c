@@ -63,17 +63,18 @@ int main() {
                 char buffer[1024] = {0};
                 read(client_sockfd, buffer, 1024);
                 // print the message
- 
+                // delete the newline at the end of the buffer
+                buffer[strlen(buffer) - 1] = '\0';
 
                 // check if the message is a negative integer
                 if (atoi(buffer) < 0) {
-                    printf("(child #%d) Request: %s, will terminate", child_proc_count, buffer);                    
+                    printf("(child #%d) Request: %s, will terminate\n", child_proc_count, buffer);                    
                     // close the socket
                     close(client_sockfd);
                     exit(0);
                 } else {
                     // send the message to the client
-                    printf("(child #%d) Request: %s", child_proc_count, buffer);
+                    printf("(child #%d) Request: %s\n", child_proc_count, buffer);
                     char message[1024];
                     sprintf(message, "%d", square(atoi(buffer)));
                     send(client_sockfd, message, strlen(message), 0);
