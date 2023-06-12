@@ -1,5 +1,5 @@
 client
 server
 service
-iclient
+inetd_client
 inetd
